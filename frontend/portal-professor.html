@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal do Professor — AcadSystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar">
+        <div>
+            <div class="sidebar-brand">
+                <div class="brand-logo">A</div>
+                <div>
+                    <div class="brand-title">AcadSystem</div>
+                    <div class="brand-sub">Portal do Professor</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-target="geral"><span class="ico">🏠</span><span>Visão Geral</span></a>
+                <a href="#" class="nav-item" data-target="turmas"><span class="ico">👥</span><span>Minhas Turmas</span></a>
+                <a href="#" class="nav-item" data-target="notas"><span class="ico">🔢</span><span>Lançar Notas</span></a>
+                <a href="#" class="nav-item" data-target="plano"><span class="ico">📋</span><span>Plano de Ensino</span></a>
+            </nav>
+        </div>
+
+        <div class="sidebar-footer">
+            Universidade do Estado da Bahia<br>
+            <span class="campus">Campus I - Salvador</span>
+            <button class="btn-logout" data-action="logout"><span>⏻</span> Sair da conta</button>
+        </div>
+    </aside>
+
+    <!-- ===================== MAIN ===================== -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-user">
+                <div class="avatar" style="background:#059669;">RL</div>
+                <div>
+                    <div class="u-name">Prof. Dr. Ricardo Lima</div>
+                    <div class="u-role">Dpto. de Ciências Exatas · Registro 1234567</div>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <span class="topbar-clock" id="relogio"></span>
+                <span class="badge-portal badge-emerald">Docente</span>
+                <button class="bell">🔔<span class="dot"></span></button>
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="breadcrumb">
+                <span>Início</span> › <span class="here">Visão Geral</span>
+            </div>
+            <h1 class="page-title" data-saudacao="Bem-vindo, {nome} 👋">Bem-vindo, Prof. Ricardo 👋</h1>
+            <p class="page-sub">Gerencie suas turmas, lance frequência e notas do semestre letivo 2026.1.</p>
+
+            <!-- ============ SEÇÃO: VISÃO GERAL ============ -->
+            <section data-view="geral">
+                <div class="notice notice-emerald section-gap">
+                    <span class="ico">📽️</span>
+                    <div>
+                        <h4>Módulo do Docente</h4>
+                        <p>Gerencie diário de classe, frequência diária, registro de notas N1/N2 e plano de ensino anual.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-4">
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Turmas Ativas</span><span class="ico text-emerald">👥</span></div>
+                        <div class="value">2</div>
+                        <span class="hint text-emerald">Semestre 2026.1</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Total de Alunos</span><span class="ico text-blue">🎓</span></div>
+                        <div class="value">83</div>
+                        <span class="hint text-blue">Matriculados</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Aulas Lançadas</span><span class="ico text-purple">📝</span></div>
+                        <div class="value">24/30</div>
+                        <span class="hint text-muted">Diário de classe</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Notas Pendentes</span><span class="ico" style="color:var(--red)">⏳</span></div>
+                        <div class="value" style="color:var(--red)">12</div>
+                        <span class="hint text-muted">Encerram em 05/05</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ SEÇÃO: MINHAS TURMAS ============ -->
+            <section data-view="turmas" style="display:none;">
+                <div class="panel section-gap">
+                    <div class="panel-head"><h3><span class="ico">👥</span> Minhas Turmas Ativas (2026.1)</h3></div>
+
+                    <div class="list-row">
+                        <div>
+                            <span class="tag" style="background:var(--emerald-bg);color:var(--emerald);">Engenharia de Computação</span>
+                            <h5>Cálculo Diferencial e Integral I (MAT-A01)</h5>
+                            <p>Seg / Qua · 08:00 às 10:00 · 45 alunos matriculados</p>
+                        </div>
+                        <button class="btn btn-dark" data-turma="Cálculo Diferencial e Integral I (MAT-A01)">Abrir Diário</button>
+                    </div>
+
+                    <div class="list-row">
+                        <div>
+                            <span class="tag" style="background:var(--emerald-bg);color:var(--emerald);">Sistemas de Informação</span>
+                            <h5>Algoritmos e Estrutura de Dados I (DEX-011)</h5>
+                            <p>Ter / Qui · 10:00 às 12:00 · 38 alunos matriculados</p>
+                        </div>
+                        <button class="btn btn-dark" data-turma="Algoritmos e Estrutura de Dados I (DEX-011)">Abrir Diário</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ SEÇÃO: LANÇAR NOTAS ============ -->
+            <section data-view="notas" style="display:none;">
+                <div class="panel section-gap">
+                    <div class="panel-head">
+                        <h3><span class="ico">🔢</span> Lançamento de Notas — MAT-A01</h3>
+                        <button class="btn btn-red" id="salvar-notas">Salvar Notas</button>
+                    </div>
+                    <table id="tabela-lancamento">
+                        <thead><tr><th>Matrícula</th><th>Aluno</th><th>N1</th><th>N2</th><th>Média</th></tr></thead>
+                        <tbody>
+                            <tr data-aluno><td>202610293</td><td>Maria Clara Souza</td>
+                                <td><input class="nota" type="number" min="0" max="10" step="0.1" value="8.5"></td>
+                                <td><input class="nota" type="number" min="0" max="10" step="0.1" value=""></td>
+                                <td class="media">—</td></tr>
+                            <tr data-aluno><td>202610118</td><td>João Pedro Alves</td>
+                                <td><input class="nota" type="number" min="0" max="10" step="0.1" value="7.0"></td>
+                                <td><input class="nota" type="number" min="0" max="10" step="0.1" value=""></td>
+                                <td class="media">—</td></tr>
+                            <tr data-aluno><td>202610457</td><td>Ana Beatriz Costa</td>
+                                <td><input class="nota" type="number" min="0" max="10" step="0.1" value="9.2"></td>
+                                <td><input class="nota" type="number" min="0" max="10" step="0.1" value=""></td>
+                                <td class="media">—</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="page-sub" style="margin-top:12px;">A média é calculada automaticamente conforme você digita as notas.</p>
+                </div>
+            </section>
+
+            <!-- ============ SEÇÃO: PLANO DE ENSINO ============ -->
+            <section data-view="plano" style="display:none;">
+                <div class="panel section-gap">
+                    <div class="panel-head"><h3><span class="ico">📋</span> Plano de Ensino — MAT-A01</h3></div>
+                    <div class="form-group">
+                        <label>Ementa da disciplina</label>
+                        <textarea rows="4" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;">Limites, derivadas e integrais de funções de uma variável real. Aplicações em engenharia.</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Carga horária</label><input type="text" value="68h"></div>
+                        <div class="form-group"><label>Bibliografia básica</label><input type="text" value="STEWART, J. Cálculo, Vol. 1"></div>
+                    </div>
+                    <button class="btn btn-dark" id="salvar-plano">Salvar Plano de Ensino</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ===================== MODAL DIÁRIO ===================== -->
+    <div class="modal-overlay" id="modal-diario">
+        <div class="modal">
+            <div class="modal-head">
+                <h3>Diário de Classe</h3>
+                <button class="modal-close" data-close>✕</button>
+            </div>
+            <p id="modal-turma-nome" style="margin-bottom:16px;font-weight:600;color:var(--text-dark);"></p>
+            <p style="margin-bottom:10px;">Registre a presença dos alunos da aula de hoje:</p>
+            <div id="lista-presenca"></div>
+            <div class="modal-actions">
+                <button class="btn btn-light" data-close>Cancelar</button>
+                <button class="btn btn-red" id="salvar-presenca">Registrar Frequência</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/portal-professor.js"></script>
+</body>
+</html>

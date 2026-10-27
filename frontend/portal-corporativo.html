@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Corporativo / TI — AcadSystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar">
+        <div>
+            <div class="sidebar-brand">
+                <div class="brand-logo">A</div>
+                <div>
+                    <div class="brand-title">AcadSystem</div>
+                    <div class="brand-sub">Corporativo / TI</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-target="painel"><span class="ico">🏠</span><span>Painel da TI</span></a>
+                <a href="#" class="nav-item" data-target="cadastro"><span class="ico">➕</span><span>Novo Cadastro</span></a>
+                <a href="#" class="nav-item" data-target="usuarios"><span class="ico">👤</span><span>Gerenciar Usuários</span></a>
+            </nav>
+        </div>
+
+        <div class="sidebar-footer">
+            Universidade do Estado da Bahia<br>
+            <span class="campus">Campus I - Salvador</span>
+            <button class="btn-logout" data-action="logout"><span>⏻</span> Sair da conta</button>
+        </div>
+    </aside>
+
+    <!-- ===================== MAIN ===================== -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-user">
+                <div class="avatar" style="background:#7C3AED;">TI</div>
+                <div>
+                    <div class="u-name">Administrador TI</div>
+                    <div class="u-role">Equipe de Tecnologia · admin</div>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <span class="topbar-clock" id="relogio"></span>
+                <span class="badge-portal badge-purple">Corporativo</span>
+                <button class="bell">🔔<span class="dot"></span></button>
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="breadcrumb">
+                <span>Início</span> › <span class="here">Painel da TI</span>
+            </div>
+            <h1 class="page-title" data-saudacao="Painel da Equipe de TI">Painel da Equipe de TI</h1>
+            <p class="page-sub">Gerencie os acessos do sistema acadêmico e cadastre novos alunos e docentes.</p>
+
+            <!-- ============ SEÇÃO: PAINEL ============ -->
+            <section data-view="painel">
+                <div class="notice notice-purple section-gap">
+                    <span class="ico">🛡️</span>
+                    <div>
+                        <h4>Área restrita ao setor de TI</h4>
+                        <p>Somente a equipe de TI pode criar e gerenciar contas de alunos e docentes no AcadSystem.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-4">
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Alunos Cadastrados</span><span class="ico text-blue">🎓</span></div>
+                        <div class="value" id="kpi-alunos">1.248</div>
+                        <span class="hint text-blue">Contas ativas</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Docentes</span><span class="ico text-emerald">📽️</span></div>
+                        <div class="value" id="kpi-docentes">96</div>
+                        <span class="hint text-emerald">Contas ativas</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Requerimentos Abertos</span><span class="ico text-purple">📄</span></div>
+                        <div class="value">17</div>
+                        <span class="hint text-muted">Aguardando análise</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Status do Sistema</span><span class="ico text-emerald">🟢</span></div>
+                        <div class="value text-emerald" style="font-size:20px;">Online</div>
+                        <span class="hint text-muted">Última sync: 10:42</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-3 section-gap">
+                    <div class="service-card">
+                        <div class="s-ico blue">🎓</div>
+                        <h5>Cadastrar Aluno</h5>
+                        <p>Crie a conta de acesso do discente com e-mail institucional e matrícula.</p>
+                        <button class="btn btn-dark btn-block" data-abrir="Aluno">Novo Aluno</button>
+                    </div>
+                    <div class="service-card">
+                        <div class="s-ico emerald">📽️</div>
+                        <h5>Cadastrar Docente</h5>
+                        <p>Crie a conta de acesso do professor com e-mail ou número de registro.</p>
+                        <button class="btn btn-dark btn-block" data-abrir="Docente">Novo Docente</button>
+                    </div>
+                    <div class="service-card">
+                        <div class="s-ico purple">👤</div>
+                        <h5>Gerenciar Usuários</h5>
+                        <p>Pesquise, edite ou redefina senhas de contas já existentes no sistema.</p>
+                        <button class="btn btn-light btn-block" data-ir="usuarios">Abrir Gestão</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ SEÇÃO: NOVO CADASTRO ============ -->
+            <section data-view="cadastro" style="display:none;">
+                <div class="panel section-gap">
+                    <div class="panel-head">
+                        <h3><span class="ico">➕</span> Cadastro — <span id="tipo-cadastro">Aluno</span></h3>
+                        <div class="tabs-tipo">
+                            <button type="button" class="tipo-btn active" data-tipo="Aluno">Aluno</button>
+                            <button type="button" class="tipo-btn" data-tipo="Docente">Docente</button>
+                        </div>
+                    </div>
+
+                    <form id="form-cadastro" novalidate>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nome completo</label>
+                                <input type="text" id="c-nome" placeholder="Nome e sobrenome">
+                            </div>
+                            <div class="form-group">
+                                <label>E-mail institucional</label>
+                                <input type="email" id="c-email" placeholder="nome.sobrenome@uneb.br">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label id="label-id">Matrícula</label>
+                                <input type="text" id="c-id" placeholder="Ex: 202610293">
+                            </div>
+                            <div class="form-group">
+                                <label>Senha inicial</label>
+                                <input type="password" id="c-senha" placeholder="Mínimo de 6 caracteres">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Confirmar senha</label>
+                                <input type="password" id="c-senha2" placeholder="Repita a senha">
+                            </div>
+                            <div class="form-group" style="display:flex;align-items:flex-end;">
+                                <button type="submit" class="btn btn-purple btn-block">Confirmar Cadastro</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ============ SEÇÃO: GERENCIAR USUÁRIOS ============ -->
+            <section data-view="usuarios" style="display:none;">
+                <div class="panel section-gap">
+                    <div class="panel-head"><h3><span class="ico">👤</span> Usuários Cadastrados</h3></div>
+                    <div class="topbar-search" style="max-width:280px;margin-bottom:14px;">
+                        <span class="s-ico">🔎</span>
+                        <input type="text" id="busca-usuarios" placeholder="Buscar por nome, e-mail ou ID...">
+                    </div>
+                    <table id="tabela-usuarios">
+                        <thead><tr><th>Nome</th><th>E-mail</th><th>ID</th><th>Perfil</th><th>Ações</th></tr></thead>
+                        <tbody>
+                            <tr><td>Maria Clara Souza</td><td>maria.souza@uneb.br</td><td>202610293</td><td><span class="pill pill-blue">Aluno</span></td><td><button class="btn btn-light" data-reset>Redefinir senha</button></td></tr>
+                            <tr><td>Ricardo Lima</td><td>ricardo.lima@uneb.br</td><td>1234567</td><td><span class="pill pill-green">Docente</span></td><td><button class="btn btn-light" data-reset>Redefinir senha</button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/portal-corporativo.js"></script>
+</body>
+</html>

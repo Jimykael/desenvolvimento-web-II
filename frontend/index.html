@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcadSystem — Acesso ao Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+    <div class="login-wrapper">
+
+        <!-- ===== Painel esquerdo institucional ===== -->
+        <section class="login-left">
+            <div class="brand">
+                <div class="brand-logo">A</div>
+                <div>
+                    <div class="brand-title">AcadSystem</div>
+                    <div class="brand-sub">SISTEMA ACADÊMICO</div>
+                </div>
+            </div>
+
+            <div class="left-bottom">
+                <span class="red-bar"></span>
+                <h2 class="quote">"Honrar, Servir e Educar."</h2>
+                <p class="desc">
+                    Seja bem-vindo ao portal integrado da AcadSystem. Aqui você acessa suas notas,
+                    frequência, materiais didáticos, cronogramas de pesquisa e serviços administrativos
+                    de forma rápida e segura.
+                </p>
+                <p class="copy">© 2026 AcadSystem. Todos os direitos reservados.</p>
+            </div>
+        </section>
+
+        <!-- ===== Painel direito (login) ===== -->
+        <section class="login-right">
+            <div class="login-box">
+                <span class="restrito">ACESSO RESTRITO</span>
+                <h1>Portal Integrado AcadSystem</h1>
+                <p class="login-intro">Selecione o seu perfil institucional e insira suas credenciais para acessar o sistema acadêmico.</p>
+
+                <!-- Abas de perfil -->
+                <div class="tabs">
+                    <button type="button" class="tab active" data-perfil="aluno">Portal do Aluno</button>
+                    <button type="button" class="tab" data-perfil="docente">Portal do Docente</button>
+                    <button type="button" class="tab" data-perfil="corporativo">Corporativo / TI</button>
+                </div>
+
+                <form id="form-login" novalidate>
+                    <div class="form-group">
+                        <label id="labelUsuario">E-mail institucional</label>
+                        <input type="text" id="usuario" placeholder="Ex: nome.sobrenome@uneb.br" autocomplete="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Senha de Acesso</label>
+                        <div class="senha-wrap">
+                            <input type="password" id="senha" placeholder="Sua senha pessoal" autocomplete="current-password">
+                            <button type="button" id="toggle-senha" class="toggle-senha" title="Mostrar/ocultar senha">👁️</button>
+                        </div>
+                    </div>
+
+                    <div class="options">
+                        <label class="check"><input type="checkbox" id="lembrar"> Lembrar meu usuário</label>
+                        <a href="#" onclick="return false;" class="link-red">Esqueceu sua senha?</a>
+                    </div>
+
+                    <button type="submit" class="btn-entrar">Acessar Minha Conta</button>
+                </form>
+
+                <div class="safe-box">🔒 Ambiente seguro. Seus dados de acesso estão protegidos por criptografia.</div>
+
+                <div class="footer-login">
+                    Primeiro acesso? <a href="#" onclick="return false;" class="link-red">Fale com o suporte de TI</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

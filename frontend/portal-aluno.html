@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal do Aluno — AcadSystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar">
+        <div>
+            <div class="sidebar-brand">
+                <div class="brand-logo">A</div>
+                <div>
+                    <div class="brand-title">AcadSystem</div>
+                    <div class="brand-sub">Portal do Aluno</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-target="geral"><span class="ico">🏠</span><span>Visão Geral</span></a>
+                <a href="#" class="nav-item" data-target="notas"><span class="ico">📊</span><span>Minhas Notas</span></a>
+                <a href="#" class="nav-item" data-target="frequencia"><span class="ico">✅</span><span>Frequência</span></a>
+                <a href="#" class="nav-item" data-target="horario"><span class="ico">📅</span><span>Horário de Aulas</span></a>
+                <a href="#" class="nav-item" data-target="documentos"><span class="ico">📄</span><span>Documentos</span></a>
+            </nav>
+        </div>
+
+        <div class="sidebar-footer">
+            Universidade do Estado da Bahia<br>
+            <span class="campus">Campus I - Salvador</span>
+            <button class="btn-logout" data-action="logout"><span>⏻</span> Sair da conta</button>
+        </div>
+    </aside>
+
+    <!-- ===================== MAIN ===================== -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-user">
+                <div class="avatar">MC</div>
+                <div>
+                    <div class="u-name">Maria Clara Souza</div>
+                    <div class="u-role">Eng. de Computação · Matrícula 202610293</div>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <span class="topbar-clock" id="relogio"></span>
+                <span class="badge-portal badge-blue">Discente</span>
+                <button class="bell">🔔<span class="dot"></span></button>
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="breadcrumb">
+                <span>Início</span> › <span class="here">Visão Geral</span>
+            </div>
+            <h1 class="page-title" data-saudacao="Olá, {nome} 👋">Olá, Maria Clara 👋</h1>
+            <p class="page-sub">Acompanhe seu desempenho acadêmico, frequência e serviços do semestre 2026.1.</p>
+
+            <!-- ============ SEÇÃO: VISÃO GERAL ============ -->
+            <section data-view="geral">
+                <div class="notice notice-blue section-gap">
+                    <span class="ico">ℹ️</span>
+                    <div>
+                        <h4>Bem-vinda ao seu painel discente</h4>
+                        <p>Consulte notas, frequência e emita documentos a qualquer momento com suas credenciais @aluno.uneb.br.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-4">
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Rendimento Médio (CR)</span><span class="ico text-emerald">📈</span></div>
+                        <div class="value">8.6</div>
+                        <span class="hint text-emerald">Acima da média do curso</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Frequência Geral</span><span class="ico text-blue">✅</span></div>
+                        <div class="value">92,4%</div>
+                        <span class="hint text-blue">Situação regular</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Disciplinas Ativas</span><span class="ico text-purple">📚</span></div>
+                        <div class="value">5</div>
+                        <span class="hint text-muted">2026.1 · 340h totais</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Status Rematrícula</span><span class="ico text-emerald">🛡️</span></div>
+                        <div class="value text-emerald" style="font-size:20px;">Confirmada</div>
+                        <span class="hint text-muted">Sem pendências</span>
+                    </div>
+                </div>
+
+                <div class="panel section-gap">
+                    <div class="panel-head"><h3><span class="ico">⚡</span> Ações Rápidas do Estudante</h3></div>
+                    <div class="quick-grid">
+                        <div class="quick-btn" data-doc="Histórico Escolar"><span class="ico">📜</span><span>Emitir Histórico</span></div>
+                        <div class="quick-btn" data-doc="Comprovante de Matrícula"><span class="ico">🏅</span><span>Comprovante de Matrícula</span></div>
+                        <div class="quick-btn" data-ir="horario"><span class="ico">📅</span><span>Horário das Aulas</span></div>
+                        <div class="quick-btn" data-doc="Carteira Estudantil"><span class="ico">💳</span><span>Carteira Estudantil</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ SEÇÃO: MINHAS NOTAS ============ -->
+            <section data-view="notas" style="display:none;">
+                <div class="panel section-gap">
+                    <div class="panel-head">
+                        <h3><span class="ico">📊</span> Boletim — Disciplinas 2026.1</h3>
+                        <span class="pill pill-blue">Parcial N1</span>
+                    </div>
+                    <div class="topbar-search" style="max-width:280px;margin-bottom:14px;">
+                        <span class="s-ico">🔎</span>
+                        <input type="text" id="busca-notas" placeholder="Filtrar disciplina...">
+                    </div>
+                    <table id="tabela-notas">
+                        <thead>
+                            <tr><th>Disciplina</th><th>Código</th><th>N1</th><th>Frequência</th><th>Situação</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Cálculo Diferencial e Integral I</td><td>MAT-A01</td><td>8,5</td><td>95%</td><td><span class="pill pill-green">Cursando</span></td></tr>
+                            <tr><td>Algoritmos e Estrutura de Dados I</td><td>DEX-011</td><td>9,2</td><td>90%</td><td><span class="pill pill-green">Cursando</span></td></tr>
+                            <tr><td>Introdução à Engenharia</td><td>ENG-003</td><td>7,8</td><td>88%</td><td><span class="pill pill-green">Cursando</span></td></tr>
+                            <tr><td>Física Geral I</td><td>FIS-A02</td><td>6,0</td><td>82%</td><td><span class="pill pill-amber">Atenção</span></td></tr>
+                            <tr><td>Metodologia Científica</td><td>EDU-100</td><td>9,5</td><td>100%</td><td><span class="pill pill-green">Cursando</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ============ SEÇÃO: FREQUÊNCIA ============ -->
+            <section data-view="frequencia" style="display:none;">
+                <div class="panel section-gap">
+                    <div class="panel-head"><h3><span class="ico">✅</span> Frequência por Disciplina</h3></div>
+                    <div id="lista-frequencia"></div>
+                </div>
+            </section>
+
+            <!-- ============ SEÇÃO: HORÁRIO ============ -->
+            <section data-view="horario" style="display:none;">
+                <div class="panel section-gap">
+                    <div class="panel-head"><h3><span class="ico">📅</span> Horário de Aulas — 2026.1</h3></div>
+                    <table>
+                        <thead><tr><th>Horário</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th></tr></thead>
+                        <tbody>
+                            <tr><td>08:00–10:00</td><td>Cálculo I</td><td>—</td><td>Cálculo I</td><td>—</td></tr>
+                            <tr><td>10:00–12:00</td><td>—</td><td>Algoritmos I</td><td>—</td><td>Algoritmos I</td></tr>
+                            <tr><td>14:00–16:00</td><td>Física I</td><td>Intro. Eng.</td><td>Física I</td><td>Metod. Científica</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ============ SEÇÃO: DOCUMENTOS ============ -->
+            <section data-view="documentos" style="display:none;">
+                <div class="grid grid-3 section-gap">
+                    <div class="service-card">
+                        <div class="s-ico blue">📜</div>
+                        <h5>Histórico Escolar</h5>
+                        <p>Documento oficial com todas as disciplinas cursadas e menções.</p>
+                        <button class="btn btn-dark btn-block" data-doc="Histórico Escolar">Emitir PDF</button>
+                    </div>
+                    <div class="service-card">
+                        <div class="s-ico emerald">🏅</div>
+                        <h5>Comprovante de Matrícula</h5>
+                        <p>Comprovante do vínculo ativo no semestre 2026.1.</p>
+                        <button class="btn btn-dark btn-block" data-doc="Comprovante de Matrícula">Emitir PDF</button>
+                    </div>
+                    <div class="service-card">
+                        <div class="s-ico purple">💳</div>
+                        <h5>Carteira Estudantil</h5>
+                        <p>Segunda via digital da carteira de identificação estudantil.</p>
+                        <button class="btn btn-dark btn-block" data-doc="Carteira Estudantil">Gerar</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/portal-aluno.js"></script>
+</body>
+</html>
