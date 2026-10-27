@@ -10,6 +10,7 @@ import re
 import hmac
 import hashlib
 import secrets
+from datetime import datetime
 from tkinter import messagebox
 from PIL import Image, ImageTk, ImageEnhance, ImageDraw, ImageFont
 
@@ -125,6 +126,30 @@ PERFIS = {
         "exemplo": "Ex: admin ou ti@acadsystem.com",
         "titulo": "equipe de TI",
     },
+}
+
+
+# nomes em português para o rodapé de data e hora (não depende do idioma do sistema)
+DIAS_SEMANA = ["segunda-feira", "terça-feira", "quarta-feira", "quinta-feira",
+               "sexta-feira", "sábado", "domingo"]
+MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho",
+         "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
+
+# os 8 botões da tela principal de cada perfil (por enquanto são só placeholders,
+# exceto "Cadastrar aluno/docente" da TI, que continuam funcionando - veja tela_principal)
+BOTOES_PRINCIPAIS = {
+    "Portal do Aluno": [
+        "Conferir notas e aulas", "Frequência", "Materiais didáticos", "Horários e cronograma",
+        "Calendário acadêmico", "Solicitações", "Mensagens", "Meu perfil",
+    ],
+    "Portal do Docente": [
+        "Conferir matérias e alunos", "Lançar notas", "Registrar frequência", "Materiais didáticos",
+        "Cronograma de aulas", "Calendário acadêmico", "Mensagens", "Meu perfil",
+    ],
+    "Corporativo / TI": [
+        "Conferir docentes e discentes", "Cadastrar aluno", "Cadastrar docente", "Gerenciar cursos",
+        "Relatórios", "Calendário acadêmico", "Suporte técnico", "Configurações",
+    ],
 }
 
 
@@ -302,6 +327,7 @@ class App(ctk.CTk, BackEnd):
     # PAINEL ESQUERDO 
     # ----------------------------------------------------------------
     def cria_painel_esquerdo(self):
+        self.para_relogio()   # toda troca de tela passa por aqui: encerra o relógio da tela anterior
         painel = ctk.CTkFrame(self, width=530, height=620, corner_radius=0, fg_color=COR_PAINEL_ESCURO)
         painel.place(x=0, y=0)
         painel.pack_propagate(False)
@@ -459,42 +485,70 @@ class App(ctk.CTk, BackEnd):
     def tela_principal(self, perfil, nome):
         for widget in self.winfo_children():
             widget.destroy()
- 
+
         self.cria_painel_esquerdo()
- 
+
         painel = ctk.CTkFrame(self, width=420, height=620, corner_radius=0, fg_color=COR_BRANCO)
         painel.place(x=530, y=0)
- 
+
         conteudo = ctk.CTkFrame(painel, fg_color="transparent", width=340)
-        conteudo.place(x=40, y=50)
- 
+        conteudo.place(x=40, y=30)
+
         ctk.CTkLabel(conteudo, text="ACESSO AUTORIZADO", text_color=COR_VERMELHO,
                      font=("Segoe UI", 11, "bold"), anchor="w").grid(row=0, column=0, sticky="w")
         ctk.CTkLabel(conteudo, text=f"Olá, {nome}!", text_color=COR_TITULO, font=("Georgia", 24, "bold"),
                      anchor="w", justify="left", wraplength=340).grid(row=1, column=0, sticky="w", pady=(4, 6))
- 
+        ctk.CTkLabel(conteudo, text=f"Você entrou no AcadSystem como {PERFIS[perfil]['titulo']}.",
+                     text_color=COR_SUBTITULO, font=("Segoe UI", 11),
+                     anchor="w").grid(row=2, column=0, sticky="w", pady=(0, 16))
+
+        estilo_botao = dict(width=340, height=36, font=("Segoe UI", 12, "bold"), corner_radius=8,
+                            fg_color=COR_BOTAO, hover_color=COR_BOTAO_HOVER)
         estilo_sair = dict(width=340, height=32, font=("Segoe UI", 10), corner_radius=8, fg_color="transparent",
                            hover_color="#f3f4f6", text_color=COR_VERMELHO, border_width=1, border_color=COR_VERMELHO)
- 
+
+        # botões que já têm função de verdade (os demais são placeholders)
+        acoes_reais = {}
         if perfil == "Corporativo / TI":
-            ctk.CTkLabel(conteudo, text="Painel da equipe de TI.\nEscolha o que deseja cadastrar.",
-                         text_color=COR_SUBTITULO, font=("Segoe UI", 11), justify="left",
-                         anchor="w").grid(row=2, column=0, sticky="w", pady=(0, 24))
-            estilo_botao = dict(width=340, height=40, font=("Segoe UI", 12, "bold"), corner_radius=8,
-                                fg_color=COR_BOTAO, hover_color=COR_BOTAO_HOVER)
-            ctk.CTkButton(conteudo, text="Cadastrar aluno", command=lambda: self.tela_de_cadastro("Aluno"),
-                          **estilo_botao).grid(row=3, column=0, sticky="w", pady=(0, 12))
-            ctk.CTkButton(conteudo, text="Cadastrar docente", command=lambda: self.tela_de_cadastro("Docente"),
-                          **estilo_botao).grid(row=4, column=0, sticky="w", pady=(0, 24))
-            ctk.CTkButton(conteudo, text="Sair da conta", command=self.tela_de_login,
-                          **estilo_sair).grid(row=5, column=0, sticky="w")
-        else:
-            ctk.CTkLabel(conteudo, text=f"Você entrou no AcadSystem como {PERFIS[perfil]['titulo']}.",
-                         text_color=COR_SUBTITULO, font=("Segoe UI", 11),
-                         anchor="w").grid(row=2, column=0, sticky="w", pady=(0, 24))
-            ctk.CTkButton(conteudo, text="Sair da conta", command=self.tela_de_login,
-                          **estilo_sair).grid(row=3, column=0, sticky="w")
- 
+            acoes_reais = {
+                "Cadastrar aluno": lambda: self.tela_de_cadastro("Aluno"),
+                "Cadastrar docente": lambda: self.tela_de_cadastro("Docente"),
+            }
+
+        for i, texto in enumerate(BOTOES_PRINCIPAIS[perfil]):
+            comando = acoes_reais.get(texto) or (lambda t=texto: self.botao_em_breve(t))
+            ctk.CTkButton(conteudo, text=texto, command=comando,
+                          **estilo_botao).grid(row=3 + i, column=0, sticky="w", pady=(0, 8))
+
+        ctk.CTkButton(conteudo, text="Sair da conta", command=self.tela_de_login,
+                      **estilo_sair).grid(row=11, column=0, sticky="w", pady=(10, 0))
+
+        # rodapé: data e hora (atualiza sozinho a cada segundo)
+        ctk.CTkFrame(painel, width=340, height=1, fg_color=COR_BORDA_INPUT).place(x=40, y=570)
+        self.lb_data_hora = ctk.CTkLabel(painel, text="", text_color=COR_SUBTITULO, font=("Segoe UI", 9))
+        self.lb_data_hora.place(x=40, y=582)
+        self.atualiza_data_hora()
+
+    def botao_em_breve(self, nome_botao):
+        """Ação provisória dos botões que ainda não foram implementados."""
+        messagebox.showinfo(title="AcadSystem", message=f"\"{nome_botao}\"\nEsta função ainda está em desenvolvimento.")
+
+    def atualiza_data_hora(self):
+        agora = datetime.now()
+        dia_semana = DIAS_SEMANA[agora.weekday()].capitalize()
+        self.lb_data_hora.configure(
+            text=f"{dia_semana}, {agora.day} de {MESES[agora.month - 1]} de {agora.year}   •   {agora:%H:%M:%S}")
+        self.id_relogio = self.after(1000, self.atualiza_data_hora)
+
+    def para_relogio(self):
+        """Cancela a atualização do rodapé (chamado ao sair da tela principal)."""
+        if getattr(self, "id_relogio", None):
+            try:
+                self.after_cancel(self.id_relogio)
+            except Exception:
+                pass
+            self.id_relogio = None
+
     # ----------------------------------------------------------------
     # TELA DE CADASTRO (só alcançável pela equipe de TI logada)
     # ----------------------------------------------------------------
