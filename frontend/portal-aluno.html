@@ -41,10 +41,10 @@
     <div class="main-wrapper">
         <header class="topbar">
             <div class="topbar-user">
-                <div class="avatar">MC</div>
+                <div class="avatar">--</div>
                 <div>
-                    <div class="u-name">Maria Clara Souza</div>
-                    <div class="u-role">Eng. de Computação · Matrícula 202610293</div>
+                    <div class="u-name">Carregando...</div>
+                    <div class="u-role"></div>
                 </div>
             </div>
             <div class="topbar-actions">
@@ -58,7 +58,7 @@
             <div class="breadcrumb">
                 <span>Início</span> › <span class="here">Visão Geral</span>
             </div>
-            <h1 class="page-title" data-saudacao="Olá, {nome} 👋">Olá, Maria Clara 👋</h1>
+            <h1 class="page-title" data-saudacao="Olá, {nome} 👋">Olá 👋</h1>
             <p class="page-sub">Acompanhe seu desempenho acadêmico, frequência e serviços do semestre 2026.1.</p>
 
             <!-- ============ SEÇÃO: VISÃO GERAL ============ -->
@@ -74,22 +74,22 @@
                 <div class="grid grid-4">
                     <div class="stat-card">
                         <div class="top"><span class="label">Rendimento Médio (CR)</span><span class="ico text-emerald">📈</span></div>
-                        <div class="value">8.6</div>
-                        <span class="hint text-emerald">Acima da média do curso</span>
+                        <div class="value" id="st-cr">—</div>
+                        <span class="hint text-emerald">Média das notas lançadas</span>
                     </div>
                     <div class="stat-card">
                         <div class="top"><span class="label">Frequência Geral</span><span class="ico text-blue">✅</span></div>
-                        <div class="value">92,4%</div>
-                        <span class="hint text-blue">Situação regular</span>
+                        <div class="value" id="st-freq">—</div>
+                        <span class="hint text-blue" id="st-freq-hint">Mínimo exigido: 75%</span>
                     </div>
                     <div class="stat-card">
                         <div class="top"><span class="label">Disciplinas Ativas</span><span class="ico text-purple">📚</span></div>
-                        <div class="value">5</div>
-                        <span class="hint text-muted">2026.1 · 340h totais</span>
+                        <div class="value" id="st-disc">0</div>
+                        <span class="hint text-muted" id="st-carga">2026.1</span>
                     </div>
                     <div class="stat-card">
                         <div class="top"><span class="label">Status Rematrícula</span><span class="ico text-emerald">🛡️</span></div>
-                        <div class="value text-emerald" style="font-size:20px;">Confirmada</div>
+                        <div class="value text-emerald" style="font-size:20px;" id="st-rematricula">—</div>
                         <span class="hint text-muted">Sem pendências</span>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                 <div class="panel section-gap">
                     <div class="panel-head">
                         <h3><span class="ico">📊</span> Boletim — Disciplinas 2026.1</h3>
-                        <span class="pill pill-blue">Parcial N1</span>
+                        <span class="pill pill-blue">Aprovação: média ≥ 6 e frequência ≥ 75%</span>
                     </div>
                     <div class="topbar-search" style="max-width:280px;margin-bottom:14px;">
                         <span class="s-ico">🔎</span>
@@ -118,15 +118,9 @@
                     </div>
                     <table id="tabela-notas">
                         <thead>
-                            <tr><th>Disciplina</th><th>Código</th><th>N1</th><th>Frequência</th><th>Situação</th></tr>
+                            <tr><th>Disciplina</th><th>Código</th><th>N1</th><th>N2</th><th>Média</th><th>Frequência</th><th>Situação</th></tr>
                         </thead>
-                        <tbody>
-                            <tr><td>Cálculo Diferencial e Integral I</td><td>MAT-A01</td><td>8,5</td><td>95%</td><td><span class="pill pill-green">Cursando</span></td></tr>
-                            <tr><td>Algoritmos e Estrutura de Dados I</td><td>DEX-011</td><td>9,2</td><td>90%</td><td><span class="pill pill-green">Cursando</span></td></tr>
-                            <tr><td>Introdução à Engenharia</td><td>ENG-003</td><td>7,8</td><td>88%</td><td><span class="pill pill-green">Cursando</span></td></tr>
-                            <tr><td>Física Geral I</td><td>FIS-A02</td><td>6,0</td><td>82%</td><td><span class="pill pill-amber">Atenção</span></td></tr>
-                            <tr><td>Metodologia Científica</td><td>EDU-100</td><td>9,5</td><td>100%</td><td><span class="pill pill-green">Cursando</span></td></tr>
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
             </section>
@@ -143,13 +137,9 @@
             <section data-view="horario" style="display:none;">
                 <div class="panel section-gap">
                     <div class="panel-head"><h3><span class="ico">📅</span> Horário de Aulas — 2026.1</h3></div>
-                    <table>
-                        <thead><tr><th>Horário</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th></tr></thead>
-                        <tbody>
-                            <tr><td>08:00–10:00</td><td>Cálculo I</td><td>—</td><td>Cálculo I</td><td>—</td></tr>
-                            <tr><td>10:00–12:00</td><td>—</td><td>Algoritmos I</td><td>—</td><td>Algoritmos I</td></tr>
-                            <tr><td>14:00–16:00</td><td>Física I</td><td>Intro. Eng.</td><td>Física I</td><td>Metod. Científica</td></tr>
-                        </tbody>
+                    <table id="tabela-horario">
+                        <thead><tr><th>Horário</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th></tr></thead>
+                        <tbody></tbody>
                     </table>
                 </div>
             </section>

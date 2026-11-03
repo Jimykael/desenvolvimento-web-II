@@ -13,28 +13,77 @@ const PERFIS_INFO = {
     corporativo: { pagina: 'portal-corporativo.html', rotulo: 'Corporativo / TI' }
 };
 
-function salvarSessao(perfil, nome) {
+/* ---------------- API ----------------
+   Se a página foi aberta pelo Django (porta 8000), usa caminho relativo.
+   Se foi aberta por outro servidor (ex.: Live Server), aponta para o Django. */
+const API_BASE = window.location.port === '8000' ? '/api' : 'http://127.0.0.1:8000/api';
+
+/* Chamada à API com token. Retorna o JSON ou lança Error(mensagem). */
+async function api(caminho, opcoes = {}) {
+    const { token } = obterSessao();
+    const config = {
+        method: opcoes.method || 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    };
+    if (token) config.headers['Authorization'] = 'Bearer ' + token;
+    if (opcoes.corpo !== undefined) config.body = JSON.stringify(opcoes.corpo);
+
+    let resposta;
+    try {
+        resposta = await fetch(API_BASE + caminho, config);
+    } catch (e) {
+        throw new Error('Não foi possível conectar ao servidor. Verifique se o backend está rodando.');
+    }
+    let dados = {};
+    try { dados = await resposta.json(); } catch (e) { /* resposta sem corpo */ }
+
+    // Token expirado/inválido fora da tela de login: volta ao login
+    if (resposta.status === 401 && token) {
+        encerrarSessao();
+        window.location.href = 'index.html';
+        throw new Error(dados.erro || 'Sessão expirada.');
+    }
+    if (!resposta.ok) throw new Error(dados.erro || 'Erro inesperado no servidor.');
+    return dados;
+}
+
+/* Escapa texto antes de inserir em innerHTML (evita XSS com dados do banco) */
+function esc(texto) {
+    return String(texto ?? '').replace(/[&<>"']/g, c => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function fmtNum(valor, sufixo = '') {
+    return valor === null || valor === undefined
+        ? '—'
+        : String(valor).replace('.', ',') + sufixo;
+}
+
+function salvarSessao(perfil, nome, token, detalhe) {
     localStorage.setItem('acad_perfil', perfil);
     localStorage.setItem('acad_nome', nome || '');
+    localStorage.setItem('acad_token', token || '');
+    localStorage.setItem('acad_detalhe', detalhe || '');
 }
 
 function obterSessao() {
     return {
         perfil: localStorage.getItem('acad_perfil'),
-        nome: localStorage.getItem('acad_nome')
+        nome: localStorage.getItem('acad_nome'),
+        token: localStorage.getItem('acad_token'),
+        detalhe: localStorage.getItem('acad_detalhe')
     };
 }
 
 function encerrarSessao() {
-    localStorage.removeItem('acad_perfil');
-    localStorage.removeItem('acad_nome');
+    ['acad_perfil', 'acad_nome', 'acad_token', 'acad_detalhe'].forEach(k => localStorage.removeItem(k));
 }
 
 /* Protege um portal: se não houver sessão do perfil certo, volta ao login.
-   (Protótipo — em produção a validação seria no servidor.) */
+   A validação real é feita pelo servidor a cada chamada da API. */
 function protegerPortal(perfilEsperado) {
-    const { perfil } = obterSessao();
-    if (!perfil) {
+    const { perfil, token } = obterSessao();
+    if (!perfil || !token) {
         window.location.href = 'index.html';
         return false;
     }
@@ -142,10 +191,12 @@ function inicializarRelogio() {
 /* ---------------- PREENCHER DADOS DA SESSÃO ----------------
    Se o login gravou o nome do usuário, exibe-o na topbar. */
 function preencherUsuario() {
-    const { nome } = obterSessao();
+    const { nome, detalhe } = obterSessao();
     if (!nome) return;
     const elNome = document.querySelector('.topbar-user .u-name');
     if (elNome) elNome.textContent = nome;
+    const elRole = document.querySelector('.topbar-user .u-role');
+    if (elRole && detalhe) elRole.textContent = detalhe;
     const avatar = document.querySelector('.topbar-user .avatar');
     if (avatar) {
         const iniciais = nome.trim().split(/\s+/).map(p => p[0]).slice(0, 2).join('').toUpperCase();

@@ -9,13 +9,6 @@ const ROTULOS = {
     corporativo: { label: 'Usuário ou e-mail corporativo',          exemplo: 'Ex: admin ou ti@acadsystem.com' }
 };
 
-// Nome de exibição padrão por perfil (protótipo, sem backend)
-const NOMES_DEMO = {
-    aluno: 'Maria Clara Souza',
-    docente: 'Prof. Dr. Ricardo Lima',
-    corporativo: 'Administrador TI'
-};
-
 let perfilAtual = 'aluno';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -72,24 +65,29 @@ function entrar(e) {
         mostrarToast('O acesso do aluno é feito pelo e-mail institucional.', 'erro');
         return;
     }
-    if (senha.length < 4) {
-        mostrarToast('Senha inválida. Verifique suas credenciais.', 'erro');
-        return;
-    }
 
-    // "Lembrar meu usuário" (a senha nunca é salva — como no app.py)
-    if (document.getElementById('lembrar').checked) {
-        localStorage.setItem('acad_lembrado', JSON.stringify({ perfil: perfilAtual, usuario }));
-    } else {
-        localStorage.removeItem('acad_lembrado');
-    }
+    encerrarSessao(); // descarta token antigo antes de tentar de novo
+    const botao = document.querySelector('.btn-entrar');
+    botao.disabled = true;
 
-    // Grava a sessão e redireciona para o portal do perfil
-    const nome = NOMES_DEMO[perfilAtual];
-    salvarSessao(perfilAtual, nome);
+    api('/login/', {
+        method: 'POST',
+        corpo: { perfil: perfilAtual, identificador: usuario, senha }
+    }).then(dados => {
+        // "Lembrar meu usuário" (a senha nunca é salva — como no app.py)
+        if (document.getElementById('lembrar').checked) {
+            localStorage.setItem('acad_lembrado', JSON.stringify({ perfil: perfilAtual, usuario }));
+        } else {
+            localStorage.removeItem('acad_lembrado');
+        }
 
-    mostrarToast('Login realizado! Redirecionando...', 'ok');
-    setTimeout(() => {
-        window.location.href = PERFIS_INFO[perfilAtual].pagina;
-    }, 700);
+        salvarSessao(dados.perfil, dados.nome, dados.token, dados.detalhe);
+        mostrarToast('Login realizado! Redirecionando...', 'ok');
+        setTimeout(() => {
+            window.location.href = PERFIS_INFO[dados.perfil].pagina;
+        }, 500);
+    }).catch(err => {
+        mostrarToast(err.message, 'erro');
+        botao.disabled = false;
+    });
 }
