@@ -6,7 +6,6 @@
 const ROTULOS = {
     aluno:       { label: 'E-mail institucional',                   exemplo: 'Ex: nome.sobrenome@uneb.br' },
     docente:     { label: 'E-mail institucional ou nº de registro', exemplo: 'Ex: 1234567 ou nome.sobrenome@uneb.br' },
-    corporativo: { label: 'Usuário ou e-mail corporativo',          exemplo: 'Ex: admin ou ti@acadsystem.com' }
 };
 
 let perfilAtual = 'aluno';

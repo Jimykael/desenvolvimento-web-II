@@ -1,4 +1,6 @@
 from django.contrib.auth.hashers import check_password, make_password
+from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -96,6 +98,8 @@ class Disciplina(models.Model):
         return f'{self.nome} ({self.codigo})'
 
 
+
+
 class Horario(models.Model):
     DIAS = [(0, 'Segunda'), (1, 'Terça'), (2, 'Quarta'), (3, 'Quinta'), (4, 'Sexta'), (5, 'Sábado')]
 
@@ -107,6 +111,31 @@ class Horario(models.Model):
     class Meta:
         ordering = ['dia', 'inicio']
 
+    def clean(self):
+        super().clean()
+        if not (self.inicio and self.fim and self.dia is not None):
+            return
+        if self.fim <= self.inicio:
+            raise ValidationError('O horário de término deve ser posterior ao de início.')
+        if not self.disciplina_id:
+            return
+        # Conflito com outro horário do mesmo docente (ou da mesma disciplina).
+        disciplina = self.disciplina
+        filtro = models.Q(disciplina=disciplina)
+        if disciplina.docente_id:
+            filtro |= models.Q(disciplina__docente_id=disciplina.docente_id)
+        conflito = (
+            Horario.objects.filter(filtro, dia=self.dia, inicio__lt=self.fim, fim__gt=self.inicio)
+            .exclude(pk=self.pk)
+            .select_related('disciplina')
+            .first()
+        )
+        if conflito:
+            raise ValidationError(
+                f'Conflito de horário com {conflito.disciplina.codigo} '
+                f'({conflito.get_dia_display()} {conflito.inicio:%H:%M}-{conflito.fim:%H:%M}).'
+            )
+
     def __str__(self):
         return f'{self.disciplina.codigo} - {self.get_dia_display()} {self.inicio:%H:%M}'
 
@@ -116,6 +145,7 @@ class Matricula(models.Model):
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, related_name='matriculas')
     n1 = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     n2 = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    n3 = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
 
     class Meta:
         unique_together = [('aluno', 'disciplina')]

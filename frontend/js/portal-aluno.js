@@ -40,7 +40,7 @@ function renderizarResumo(r) {
 function renderizarBoletim(boletim) {
     const tbody = document.querySelector('#tabela-notas tbody');
     if (!boletim.length) {
-        tbody.innerHTML = '<tr><td colspan="7">Você ainda não está matriculado em nenhuma disciplina.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9">Você ainda não está matriculado em nenhuma disciplina.</td></tr>';
         return;
     }
     tbody.innerHTML = boletim.map(b => `
@@ -49,6 +49,8 @@ function renderizarBoletim(boletim) {
             <td>${esc(b.codigo)}</td>
             <td>${fmtNum(b.n1)}</td>
             <td>${fmtNum(b.n2)}</td>
+            <td>${fmtNum(b.n3)}</td>
+            <td><strong>${fmtNum(b.total)}</strong> <span style="font-size:11px;color:var(--text-muted);">(min. 21)</span></td>
             <td>${fmtNum(b.media)}</td>
             <td>${fmtNum(b.frequencia, '%')}</td>
             <td><span class="pill ${esc(b.situacao.classe)}">${esc(b.situacao.rotulo)}</span></td>

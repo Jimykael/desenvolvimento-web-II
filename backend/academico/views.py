@@ -9,8 +9,16 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from .auth import corpo_json, gerar_token, requer_perfil
-from .models import (Aluno, Aula, Corporativo, Curso, Disciplina, Docente,
-                     Horario, Matricula, Presenca)
+from .models import (
+    Aluno,
+    Aula,
+    Curso,
+    Disciplina,
+    Docente,
+    Horario,
+    Matricula,
+    Presenca,
+)
 
 REGEX_EMAIL = re.compile(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}')
 FREQUENCIA_MINIMA = 75
@@ -41,7 +49,7 @@ def login(request):
     identificador = str(dados.get('identificador', '')).strip()
     senha = str(dados.get('senha', ''))
 
-    if perfil not in ('aluno', 'docente', 'corporativo'):
+    if perfil not in ('aluno', 'docente'):
         return erro('Perfil inválido.')
     if not identificador or not senha:
         return erro('Por favor, preencha todos os campos.')
@@ -50,15 +58,12 @@ def login(request):
 
     if perfil == 'aluno':
         usuario = Aluno.objects.filter(email__iexact=identificador).first()
-    elif perfil == 'docente':
+    else:
         usuario = Docente.objects.filter(
             Q(email__iexact=identificador) | Q(registro=identificador)).first()
-    else:
-        usuario = Corporativo.objects.filter(
-            Q(usuario__iexact=identificador) | Q(email__iexact=identificador)).first()
 
     if usuario is None or not usuario.conferir_senha(senha):
-        return erro('Login ou senha incorretos. Se ainda não tem acesso, procure o setor de TI.', 401)
+        return erro('Login ou senha incorretos. Se ainda não tem acesso, procure a secretaria acadêmica.', 401)
 
     return JsonResponse({
         'token': gerar_token(perfil, usuario.pk),
@@ -93,7 +98,7 @@ def _frequencia(disciplina, aluno):
 
 
 def _media(m):
-    valores = [v for v in (m.n1, m.n2) if v is not None]
+    valores = [v for v in (m.n1, m.n2, m.n3) if v is not None]
     if not valores:
         return None
     return round(float(sum(valores) / len(valores)), 1)
@@ -106,12 +111,16 @@ def _situacao(m, freq):
         if m.disciplina.aulas.count() >= MIN_AULAS_AVALIACAO:
             return {'rotulo': 'Reprovado por falta', 'classe': 'pill-red'}
         return {'rotulo': 'Atenção', 'classe': 'pill-amber'}
-    media = _media(m)
-    if m.n1 is not None and m.n2 is not None:
-        if media >= 6:
+
+    # Se as 3 notas foram lançadas: aprovado com soma >= 21
+    if m.n1 is not None and m.n2 is not None and m.n3 is not None:
+        soma = float(m.n1 + m.n2 + m.n3)
+        if soma >= 21.0:
             return {'rotulo': 'Aprovado', 'classe': 'pill-green'}
         return {'rotulo': 'Reprovado', 'classe': 'pill-red'}
-    if media is not None and media < 6:
+
+    media = _media(m)
+    if media is not None and media < 7.0:
         return {'rotulo': 'Atenção', 'classe': 'pill-amber'}
     if freq is not None and freq < 85:
         return {'rotulo': 'Atenção', 'classe': 'pill-amber'}
@@ -136,9 +145,12 @@ def aluno_painel(request):
         aulas_total += n_aulas
         if n_aulas:
             presencas_total += Presenca.objects.filter(aula__disciplina=d, aluno=aluno, presente=True).count()
+        valores_notas = [v for v in (m.n1, m.n2, m.n3) if v is not None]
+        total_notas = round(float(sum(valores_notas)), 1) if valores_notas else None
         boletim.append({
             'disciplina': d.nome, 'codigo': d.codigo,
-            'n1': _num(m.n1), 'n2': _num(m.n2), 'media': media,
+            'n1': _num(m.n1), 'n2': _num(m.n2), 'n3': _num(m.n3),
+            'total': total_notas, 'media': media,
             'frequencia': freq, 'situacao': _situacao(m, freq),
         })
         frequencias.append({'disciplina': d.nome, 'percentual': freq})
@@ -181,7 +193,7 @@ def docente_painel(request):
     for d in disciplinas:
         n_alunos = d.matriculas.count()
         total_alunos += n_alunos
-        pendentes += d.matriculas.filter(Q(n1__isnull=True) | Q(n2__isnull=True)).count()
+        pendentes += d.matriculas.filter(Q(n1__isnull=True) | Q(n2__isnull=True) | Q(n3__isnull=True)).count()
         aulas += d.aulas.count()
         dias = ' / '.join(nomes_dia[h.dia][:3] for h in d.horarios.all())
         horas = ''
@@ -208,7 +220,7 @@ def docente_alunos_turma(request, pk):
         return erro('Turma não encontrada.', 404)
     alunos = [{
         'id': m.aluno_id, 'matricula': m.aluno.matricula, 'nome': m.aluno.nome,
-        'n1': _num(m.n1), 'n2': _num(m.n2),
+        'n1': _num(m.n1), 'n2': _num(m.n2), 'n3': _num(m.n3),
     } for m in d.matriculas.select_related('aluno').order_by('aluno__nome')]
     return JsonResponse({'turma': {'id': d.id, 'nome': d.nome, 'codigo': d.codigo}, 'alunos': alunos})
 
@@ -242,7 +254,8 @@ def docente_salvar_notas(request, pk):
                     raise ValueError('Aluno não pertence a esta turma.')
                 m.n1 = _parse_nota(item.get('n1'))
                 m.n2 = _parse_nota(item.get('n2'))
-                m.save(update_fields=['n1', 'n2'])
+                m.n3 = _parse_nota(item.get('n3'))
+                m.save(update_fields=['n1', 'n2', 'n3'])
     except ValueError as e:
         return erro(str(e))
     return JsonResponse({'ok': True})

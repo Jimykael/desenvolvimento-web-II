@@ -120,12 +120,6 @@ PERFIS = {
         "exemplo": "Ex: 1234567 ou nome.sobrenome@uneb.br",
         "titulo": "docente",
     },
-    "Corporativo / TI": {
-        "tabela": "Corporativo", "colunas_login": ["Usuario", "Email"],
-        "rotulo": "Usuário ou e-mail corporativo",
-        "exemplo": "Ex: admin ou ti@acadsystem.com",
-        "titulo": "equipe de TI",
-    },
 }
 
 
@@ -145,10 +139,6 @@ BOTOES_PRINCIPAIS = {
     "Portal do Docente": [
         "Conferir matérias e alunos", "Lançar notas", "Registrar frequência", "Materiais didáticos",
         "Cronograma de aulas", "Calendário acadêmico", "Mensagens", "Meu perfil",
-    ],
-    "Corporativo / TI": [
-        "Conferir docentes e discentes", "Cadastrar aluno", "Cadastrar docente", "Gerenciar cursos",
-        "Relatórios", "Calendário acadêmico", "Suporte técnico", "Configurações",
     ],
 }
 
@@ -241,7 +231,7 @@ class BackEnd():
             return
  
         if nome is None:
-            messagebox.showerror(title="sistema de login", message="ERROR!!!\nLogin ou senha incorretos!\nSe ainda não tem acesso, procure o setor de TI.")
+            messagebox.showerror(title="sistema de login", message="ERROR!!!\nLogin ou senha incorretos!\nSe ainda não tem acesso, procure a secretaria acadêmica.")
             return
  
         if self.lembrar_usuario.get() == 1:
@@ -453,7 +443,7 @@ class App(ctk.CTk, BackEnd):
         linha_rodape = ctk.CTkFrame(conteudo, fg_color="transparent", width=340, height=20)
         linha_rodape.grid(row=12, column=0, sticky="w")
         ctk.CTkLabel(linha_rodape, text="Primeiro acesso? ", text_color=COR_SUBTITULO,font=("Segoe UI", 10)).grid(row=0, column=0)
-        self.btn_primeiro_acesso = ctk.CTkLabel(linha_rodape, text="Fale com o suporte de TI", text_color=COR_VERMELHO,font=("Segoe UI", 10, "bold"), cursor="hand2")
+        self.btn_primeiro_acesso = ctk.CTkLabel(linha_rodape, text="Fale com a secretaria acadêmica", text_color=COR_VERMELHO,font=("Segoe UI", 10, "bold"), cursor="hand2")
         self.btn_primeiro_acesso.grid(row=0, column=1)
         self.btn_primeiro_acesso.bind("<Button-1>", lambda e: self.aviso_primeiro_acesso())
  
@@ -474,10 +464,10 @@ class App(ctk.CTk, BackEnd):
         self.username_login_entry.configure(placeholder_text=PERFIS[perfil]["exemplo"])
  
     def aviso_esqueceu_senha(self):
-        messagebox.showinfo(title="redefinir senha", message="Para redefinir a sua senha,\nprocure o setor de TI da instituição.")
+        messagebox.showinfo(title="redefinir senha", message="Para redefinir a sua senha,\nprocure a secretaria acadêmica da instituição.")
  
     def aviso_primeiro_acesso(self):
-        messagebox.showinfo(title="primeiro acesso", message="O acesso de alunos e docentes é criado pelo setor de TI.\nProcure o suporte da instituição para receber o seu acesso.")
+        messagebox.showinfo(title="primeiro acesso", message="O acesso de alunos e docentes é criado pela instituição.\nProcure a secretaria acadêmica para receber o seu acesso.")
  
     # ----------------------------------------------------------------
     # TELA PRINCIPAL (depois do login)

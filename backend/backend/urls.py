@@ -7,16 +7,17 @@
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path, re_path
+from django.views.decorators.cache import never_cache
 from django.views.generic import RedirectView
 from django.views.static import serve
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('painel-adm-on/', admin.site.urls),
     path('api/', include('academico.urls')),
 ]
 
 if settings.DEBUG:
     urlpatterns += [
         path('', RedirectView.as_view(url='/index.html')),
-        re_path(r'^(?P<path>.+)$', serve, {'document_root': settings.FRONTEND_DIR}),
+        re_path(r'^(?P<path>.+)$', never_cache(serve), {'document_root': settings.FRONTEND_DIR}),
     ]

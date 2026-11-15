@@ -136,27 +136,49 @@ async function carregarNotas(turmaId) {
                 <td>${esc(a.matricula)}</td><td>${esc(a.nome)}</td>
                 <td><input class="nota" type="number" min="0" max="10" step="0.1" value="${a.n1 ?? ''}"></td>
                 <td><input class="nota" type="number" min="0" max="10" step="0.1" value="${a.n2 ?? ''}"></td>
+                <td><input class="nota" type="number" min="0" max="10" step="0.1" value="${a.n3 ?? ''}"></td>
+                <td class="total">—</td>
                 <td class="media">—</td>
+                <td class="situacao">—</td>
             </tr>`).join('')
-            : '<tr><td colspan="5">Nenhum aluno matriculado nesta turma.</td></tr>';
+            : '<tr><td colspan="8">Nenhum aluno matriculado nesta turma.</td></tr>';
         configurarCalculoMedias();
     } catch (e) {
         mostrarToast(e.message, 'erro');
     }
 }
 
-/* Cálculo automático de médias enquanto o professor digita */
+/* Cálculo automático de médias e total enquanto o professor digita */
 function configurarCalculoMedias() {
     const calcular = tr => {
         const notas = tr.querySelectorAll('.nota');
         const n1 = parseFloat(notas[0].value);
         const n2 = parseFloat(notas[1].value);
-        const celula = tr.querySelector('.media');
-        if (!isNaN(n1) && !isNaN(n2)) {
-            const media = (n1 + n2) / 2;
-            celula.innerHTML = `<span class="pill ${media >= 6 ? 'pill-green' : 'pill-red'}">${media.toFixed(1).replace('.', ',')}</span>`;
+        const n3 = parseFloat(notas[2].value);
+        const celTotal = tr.querySelector('.total');
+        const celMedia = tr.querySelector('.media');
+        const celSituacao = tr.querySelector('.situacao');
+
+        const valores = [n1, n2, n3].filter(n => !isNaN(n));
+        if (valores.length > 0) {
+            const soma = valores.reduce((acc, curr) => acc + curr, 0);
+            const media = soma / valores.length;
+            celTotal.innerHTML = `<strong>${soma.toFixed(1).replace('.', ',')}</strong>`;
+            celMedia.textContent = media.toFixed(1).replace('.', ',');
+
+            if (valores.length === 3) {
+                if (soma >= 21) {
+                    celSituacao.innerHTML = `<span class="pill pill-green">Aprovado</span>`;
+                } else {
+                    celSituacao.innerHTML = `<span class="pill pill-red">Reprovado</span>`;
+                }
+            } else {
+                celSituacao.innerHTML = `<span class="pill ${media >= 7 ? 'pill-green' : 'pill-amber'}">Cursando</span>`;
+            }
         } else {
-            celula.textContent = '—';
+            celTotal.textContent = '—';
+            celMedia.textContent = '—';
+            celSituacao.innerHTML = `<span class="pill pill-green">Cursando</span>`;
         }
     };
     document.querySelectorAll('#tabela-lancamento tr[data-aluno]').forEach(tr => {
@@ -184,7 +206,12 @@ function configurarSalvamentos() {
         const turmaId = document.getElementById('sel-turma-notas').value;
         const notas = [...document.querySelectorAll('#tabela-lancamento tr[data-aluno]')].map(tr => {
             const campos = tr.querySelectorAll('.nota');
-            return { aluno_id: Number(tr.getAttribute('data-aluno')), n1: campos[0].value, n2: campos[1].value };
+            return {
+                aluno_id: Number(tr.getAttribute('data-aluno')),
+                n1: campos[0].value,
+                n2: campos[1].value,
+                n3: campos[2].value
+            };
         });
         if (!turmaId || !notas.length) return mostrarToast('Não há notas para salvar.', 'erro');
         try {

@@ -9,8 +9,7 @@
 
 const PERFIS_INFO = {
     aluno:       { pagina: 'portal-aluno.html',       rotulo: 'Discente' },
-    docente:     { pagina: 'portal-professor.html',   rotulo: 'Docente' },
-    corporativo: { pagina: 'portal-corporativo.html', rotulo: 'Corporativo / TI' }
+    docente:     { pagina: 'portal-professor.html',   rotulo: 'Docente' }, 
 };
 
 /* ---------------- API ----------------
