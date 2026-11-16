@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-)bp$+_ws^et%@(yvv&&$^!@(&ftz1iq7r%g4g+&rh9avv3x7-d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', ".onrender.com"]
+
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
 # Application definition
@@ -46,6 +49,7 @@ FRONTEND_DIR = BASE_DIR.parent / 'frontend'
 MIDDLEWARE = [
     'academico.middleware.CorsDevMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
