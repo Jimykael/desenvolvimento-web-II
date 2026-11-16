@@ -9,7 +9,8 @@
 
 const PERFIS_INFO = {
     aluno:       { pagina: 'portal-aluno.html',       rotulo: 'Discente' },
-    docente:     { pagina: 'portal-professor.html',   rotulo: 'Docente' }, 
+    docente:     { pagina: 'portal-professor.html',   rotulo: 'Docente' },
+    corporativo: { pagina: 'portal-admin.html',       rotulo: 'Administrador' },
 };
 
 // Substitua a linha atual por esta:

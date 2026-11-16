@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração — AcadSystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar">
+        <div>
+            <div class="sidebar-brand">
+                <div class="brand-logo">A</div>
+                <div>
+                    <div class="brand-title">AcadSystem</div>
+                    <div class="brand-sub">Administração</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-target="geral"><span class="ico">🏠</span><span>Visão Geral</span></a>
+                <a href="#" class="nav-item" data-target="usuarios"><span class="ico">👤</span><span>Usuários</span></a>
+                <a href="#" class="nav-item" data-target="cursos"><span class="ico">🎓</span><span>Cursos</span></a>
+                <a href="#" class="nav-item" data-target="disciplinas"><span class="ico">📚</span><span>Disciplinas e Horários</span></a>
+            </nav>
+        </div>
+
+        <div class="sidebar-footer">
+            Universidade do Estado da Bahia<br>
+            <span class="campus">Administração do sistema</span>
+            <button class="btn-logout" data-action="logout"><span>⏻</span> Sair da conta</button>
+        </div>
+    </aside>
+
+    <!-- ===================== MAIN ===================== -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-user">
+                <div class="avatar" style="background:#7c3aed;">--</div>
+                <div>
+                    <div class="u-name">Carregando...</div>
+                    <div class="u-role"></div>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <span class="topbar-clock" id="relogio"></span>
+                <span class="badge-portal badge-blue">Administrador</span>
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="breadcrumb">
+                <span>Início</span> › <span class="here">Visão Geral</span>
+            </div>
+            <h1 class="page-title" data-saudacao="Olá, {nome} 👋">Administração do Sistema</h1>
+            <p class="page-sub">Cadastre usuários, cursos e disciplinas, defina horários e matricule alunos.</p>
+
+            <!-- ============ VISÃO GERAL ============ -->
+            <section data-view="geral">
+                <div class="grid grid-3">
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Alunos</span><span class="ico text-blue">🎓</span></div>
+                        <div class="value" id="st-alunos">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Docentes</span><span class="ico text-emerald">👥</span></div>
+                        <div class="value" id="st-docentes">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="top"><span class="label">Disciplinas</span><span class="ico text-purple">📚</span></div>
+                        <div class="value" id="st-disciplinas">0</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ USUÁRIOS ============ -->
+            <section data-view="usuarios" style="display:none;">
+                <div class="panel section-gap">
+                    <div class="panel-head">
+                        <h3><span class="ico">👤</span> Usuários</h3>
+                        <button class="btn btn-red" id="novo-usuario">+ Novo usuário</button>
+                    </div>
+                    <table>
+                        <thead><tr><th>Tipo</th><th>Nome</th><th>E-mail</th><th>Matrícula / Registro</th><th></th></tr></thead>
+                        <tbody id="tb-usuarios"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ============ CURSOS ============ -->
+            <section data-view="cursos" style="display:none;">
+                <div class="panel section-gap">
+                    <div class="panel-head">
+                        <h3><span class="ico">🎓</span> Cursos</h3>
+                        <button class="btn btn-red" id="novo-curso">+ Novo curso</button>
+                    </div>
+                    <table>
+                        <thead><tr><th>Curso</th><th>Alunos</th><th>Disciplinas</th><th></th></tr></thead>
+                        <tbody id="tb-cursos"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ============ DISCIPLINAS ============ -->
+            <section data-view="disciplinas" style="display:none;">
+                <div class="panel section-gap">
+                    <div class="panel-head">
+                        <h3><span class="ico">📚</span> Disciplinas</h3>
+                        <button class="btn btn-red" id="nova-disciplina">+ Nova disciplina</button>
+                    </div>
+                    <table>
+                        <thead><tr><th>Código</th><th>Disciplina</th><th>Professor</th><th>Curso</th><th>Horários</th><th>Alunos</th><th></th></tr></thead>
+                        <tbody id="tb-disciplinas"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ===================== MODAL USUÁRIO ===================== -->
+    <div class="modal-overlay" id="modal-usuario">
+        <div class="modal">
+            <div class="modal-head"><h3>Novo usuário</h3><button class="modal-close" data-close>✕</button></div>
+            <div class="form-group">
+                <label>Tipo</label>
+                <select id="u-tipo"><option value="Aluno">Aluno</option><option value="Docente">Docente</option></select>
+            </div>
+            <div class="form-group"><label>Nome</label><input type="text" id="u-nome" maxlength="150"></div>
+            <div class="form-group"><label>E-mail</label><input type="email" id="u-email"></div>
+            <div class="form-group"><label id="u-label-id">Matrícula</label><input type="text" id="u-identificador" maxlength="30"></div>
+            <div class="form-group" id="g-curso"><label>Curso</label><select id="u-curso"></select></div>
+            <div class="form-group" id="g-depto" style="display:none;"><label>Departamento</label><input type="text" id="u-depto" maxlength="120"></div>
+            <div class="form-group"><label>Senha (mín. 6 caracteres)</label><input type="password" id="u-senha" autocomplete="new-password"></div>
+            <div class="modal-actions">
+                <button class="btn btn-light" data-close>Cancelar</button>
+                <button class="btn btn-red" id="salvar-usuario">Cadastrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL SENHA ===================== -->
+    <div class="modal-overlay" id="modal-senha">
+        <div class="modal">
+            <div class="modal-head"><h3>Redefinir senha</h3><button class="modal-close" data-close>✕</button></div>
+            <p id="senha-quem" style="margin-bottom:12px;font-weight:600;"></p>
+            <div class="form-group"><label>Nova senha (mín. 6 caracteres)</label><input type="password" id="nova-senha" autocomplete="new-password"></div>
+            <div class="modal-actions">
+                <button class="btn btn-light" data-close>Cancelar</button>
+                <button class="btn btn-red" id="salvar-senha">Redefinir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL CURSO ===================== -->
+    <div class="modal-overlay" id="modal-curso">
+        <div class="modal">
+            <div class="modal-head"><h3 id="curso-titulo">Novo curso</h3><button class="modal-close" data-close>✕</button></div>
+            <div class="form-group"><label>Nome do curso</label><input type="text" id="c-nome" maxlength="120"></div>
+            <div class="modal-actions">
+                <button class="btn btn-light" data-close>Cancelar</button>
+                <button class="btn btn-red" id="salvar-curso">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL DISCIPLINA ===================== -->
+    <div class="modal-overlay" id="modal-disciplina">
+        <div class="modal">
+            <div class="modal-head"><h3 id="disc-titulo">Nova disciplina</h3><button class="modal-close" data-close>✕</button></div>
+            <div class="form-row">
+                <div class="form-group"><label>Código</label><input type="text" id="d-codigo" maxlength="20"></div>
+                <div class="form-group"><label>Período</label><input type="text" id="d-periodo" maxlength="10" value="2026.1"></div>
+            </div>
+            <div class="form-group"><label>Nome</label><input type="text" id="d-nome" maxlength="150"></div>
+            <div class="form-row">
+                <div class="form-group"><label>Carga horária</label><input type="number" min="1" id="d-carga" value="68"></div>
+                <div class="form-group"><label>Curso</label><select id="d-curso"></select></div>
+            </div>
+            <div class="form-group"><label>Professor</label><select id="d-docente"></select></div>
+            <div class="modal-actions">
+                <button class="btn btn-light" data-close>Cancelar</button>
+                <button class="btn btn-red" id="salvar-disciplina">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL HORÁRIOS ===================== -->
+    <div class="modal-overlay" id="modal-horarios">
+        <div class="modal">
+            <div class="modal-head"><h3>Horários</h3><button class="modal-close" data-close>✕</button></div>
+            <p id="hor-disciplina" style="margin-bottom:12px;font-weight:600;"></p>
+            <div id="hor-lista" style="margin-bottom:16px;"></div>
+            <div class="form-row">
+                <div class="form-group"><label>Dia</label>
+                    <select id="h-dia">
+                        <option value="0">Segunda</option><option value="1">Terça</option><option value="2">Quarta</option>
+                        <option value="3">Quinta</option><option value="4">Sexta</option><option value="5">Sábado</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Início</label><input type="time" id="h-inicio"></div>
+                <div class="form-group"><label>Fim</label><input type="time" id="h-fim"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-light" data-close>Fechar</button>
+                <button class="btn btn-red" id="add-horario">Adicionar horário</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL ALUNOS DA DISCIPLINA ===================== -->
+    <div class="modal-overlay" id="modal-matriculas">
+        <div class="modal">
+            <div class="modal-head"><h3>Alunos matriculados</h3><button class="modal-close" data-close>✕</button></div>
+            <p id="mat-disciplina" style="margin-bottom:12px;font-weight:600;"></p>
+            <div id="mat-lista" style="margin-bottom:16px;"></div>
+            <div class="form-group"><label>Matricular aluno</label><select id="m-aluno"></select></div>
+            <div class="modal-actions">
+                <button class="btn btn-light" data-close>Fechar</button>
+                <button class="btn btn-red" id="add-matricula">Matricular</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/portal-admin.js"></script>
+</body>
+</html>

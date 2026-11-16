@@ -12,6 +12,7 @@ from .auth import corpo_json, gerar_token, requer_perfil
 from .models import (
     Aluno,
     Aula,
+    Corporativo,
     Curso,
     Disciplina,
     Docente,
@@ -44,33 +45,28 @@ def detalhe_usuario(perfil, u):
 @csrf_exempt
 @require_http_methods(['POST'])
 def login(request):
+    """Login único: o perfil (aluno, docente ou administrador) é descoberto pelo e-mail."""
     dados = corpo_json(request)
-    perfil = dados.get('perfil')
-    identificador = str(dados.get('identificador', '')).strip()
+    email = str(dados.get('email', '')).strip().lower()
     senha = str(dados.get('senha', ''))
 
-    if perfil not in ('aluno', 'docente'):
-        return erro('Perfil inválido.')
-    if not identificador or not senha:
+    if not email or not senha:
         return erro('Por favor, preencha todos os campos.')
-    if perfil == 'aluno' and '@' not in identificador:
-        return erro('O acesso do aluno é feito pelo e-mail institucional.')
+    if '@' not in email:
+        return erro('Informe o e-mail cadastrado.')
 
-    if perfil == 'aluno':
-        usuario = Aluno.objects.filter(email__iexact=identificador).first()
-    else:
-        usuario = Docente.objects.filter(
-            Q(email__iexact=identificador) | Q(registro=identificador)).first()
+    # O perfil é o da conta cujo e-mail e senha conferem.
+    for perfil, modelo in (('aluno', Aluno), ('docente', Docente), ('corporativo', Corporativo)):
+        usuario = modelo.objects.filter(email__iexact=email).first()
+        if usuario is not None and usuario.conferir_senha(senha):
+            return JsonResponse({
+                'token': gerar_token(perfil, usuario.pk),
+                'perfil': perfil,
+                'nome': usuario.nome,
+                'detalhe': detalhe_usuario(perfil, usuario),
+            })
 
-    if usuario is None or not usuario.conferir_senha(senha):
-        return erro('Login ou senha incorretos. Se ainda não tem acesso, procure a secretaria acadêmica.', 401)
-
-    return JsonResponse({
-        'token': gerar_token(perfil, usuario.pk),
-        'perfil': perfil,
-        'nome': usuario.nome,
-        'detalhe': detalhe_usuario(perfil, usuario),
-    })
+    return erro('E-mail ou senha incorretos. Se ainda não tem acesso, procure a secretaria acadêmica.', 401)
 
 
 @requer_perfil()

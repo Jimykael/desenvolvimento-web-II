@@ -39,18 +39,12 @@
             <div class="login-box">
                 <span class="restrito">ACESSO RESTRITO</span>
                 <h1>Portal Integrado AcadSystem</h1>
-                <p class="login-intro">Selecione o seu perfil institucional e insira suas credenciais para acessar o sistema acadêmico.</p>
-
-                <!-- Abas de perfil -->
-                <div class="tabs">
-                    <button type="button" class="tab active" data-perfil="aluno">Portal do Aluno</button>
-                    <button type="button" class="tab" data-perfil="docente">Portal do Docente</button>
-                </div>
+                <p class="login-intro">Insira seu e-mail e senha. O sistema identifica automaticamente o seu perfil de acesso.</p>
 
                 <form id="form-login" novalidate>
                     <div class="form-group">
-                        <label id="labelUsuario">E-mail institucional</label>
-                        <input type="text" id="usuario" placeholder="Ex: nome.sobrenome@uneb.br" autocomplete="username">
+                        <label for="usuario">E-mail</label>
+                        <input type="email" id="usuario" placeholder="Ex: nome.sobrenome@uneb.br" autocomplete="username">
                     </div>
 
                     <div class="form-group">
