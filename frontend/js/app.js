@@ -12,10 +12,10 @@ const PERFIS_INFO = {
     docente:     { pagina: 'portal-professor.html',   rotulo: 'Docente' }, 
 };
 
-/* ---------------- API ----------------
-   Se a página foi aberta pelo Django (porta 8000), usa caminho relativo.
-   Se foi aberta por outro servidor (ex.: Live Server), aponta para o Django. */
-const API_BASE = window.location.port === '8000' ? '/api' : 'http://127.0.0.1:8000/api';
+// Substitua a linha atual por esta:
+const API_BASE = ['5500', '5501', '3000'].includes(window.location.port)
+  ? 'http://127.0.0.1:8000/api'
+  : '/api';
 
 /* Chamada à API com token. Retorna o JSON ou lança Error(mensagem). */
 async function api(caminho, opcoes = {}) {
