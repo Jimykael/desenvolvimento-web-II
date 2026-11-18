@@ -26,6 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    document.getElementById('esqueci-senha').addEventListener('click', e => {
+        e.preventDefault();
+        mostrarToast('Entre em contato com o departamento de TI ou com a secretaria.');
+    });
+
     document.getElementById('form-login').addEventListener('submit', entrar);
 });
 
